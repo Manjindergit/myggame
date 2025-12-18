@@ -4,7 +4,7 @@ from logger import log_state
 from player import Player
 
 def main():
-    player1 = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    
     print("Starting Asteroids with pygame version: VERSION")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
@@ -13,6 +13,12 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids Game")
     
+    updateable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updateable, drawable)
+    
+    player1 = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        
     while True:
         log_state()
         for event in pygame.event.get():
@@ -20,9 +26,10 @@ def main():
                 pygame.quit()
                 return
         dt = pygame.time.Clock().tick(60) / 1000.0  # Delta time in seconds
-        player1.update(dt)
+        updateable.update(dt)
         screen.fill((0, 0, 0))  # Clear screen with black
-        player1.draw(screen)
+        for entity in drawable:
+            entity.draw(screen)
         pygame.display.flip()
         
            
